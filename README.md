@@ -5,128 +5,128 @@
 <!--<h1 align="center">yt-transcriber</h1>-->
 
 <p align="center">
-  <strong>Qualquer vídeo do YouTube, em texto, em minutos.</strong><br />
-  Timestamps automáticos, identificação de quem está falando, direto do terminal.
+  <strong>Any YouTube video, turned into text, in minutes.</strong><br />
+  Automatic timestamps, speaker identification, straight from your terminal.
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/node-%3E%3D20-brightgreen" alt="Node >= 20" />
   <img src="https://img.shields.io/badge/TypeScript-5%2B-blue" alt="TypeScript" />
   <img src="https://img.shields.io/badge/UI-Ink%20TUI-8A2BE2" alt="Ink TUI" />
-  <img src="https://img.shields.io/badge/motores-Gemini%20%7C%20Whisper-orange" alt="Gemini ou Whisper" />
+  <img src="https://img.shields.io/badge/engines-Gemini%20%7C%20Whisper-orange" alt="Gemini or Whisper" />
 </p>
 
-## O que é
+## What it is
 
-**yt-transcriber** é uma CLI interativa que transforma qualquer vídeo do YouTube em uma transcrição limpa e organizada — com timestamps, pontuação corrigida e identificação de falantes — sem sair do terminal.
+**yt-transcriber** is an interactive CLI that turns any YouTube video into a clean, organized transcript — complete with timestamps, corrected punctuation, and speaker identification — without ever leaving your terminal.
 
-Cole um link, escolha o motor de transcrição e pronto: o áudio é extraído, processado e salvo como `.txt` na sua pasta de saída. Sem depender de serviços web de terceiros, sem copiar e colar em ferramentas online.
+Paste a link, pick a transcription engine, and you're done: the audio is extracted, processed, and saved as a `.txt` file in your output folder. No third-party web services, no copy-pasting into online tools.
 
-## Por que usar
+## Why use it
 
-- **Dois motores, uma interface.** Use **Gemini** (nuvem, streaming em tempo real, ótimo para a maioria dos casos) ou **Whisper.cpp** (100% local, sem enviar áudio para lugar nenhum).
-- **Timestamps e diarização de graça.** Cada transcrição já sai com marcações `[MM:SS]` e identificação de speakers quando há mais de uma pessoa falando.
-- **TUI de verdade, não só um spinner.** Interface construída com Ink mostra cada etapa do processo — download, upload, transcrição — em tempo real.
-- **Zero fricção de setup.** O binário do `yt-dlp` é baixado automaticamente na instalação; não é preciso instalar Python nem configurar nada à parte.
-- **Funciona com ou sem flags.** Rode `./yt-transcriber` e responda às perguntas, ou passe tudo via linha de comando para uso em scripts.
+- **Two engines, one interface.** Use **Gemini** (cloud, real-time streaming, great for most cases) or **Whisper.cpp** (100% local, your audio never leaves your machine).
+- **Timestamps and diarization, built in.** Every transcript comes with `[MM:SS]` markers and speaker identification whenever more than one person is talking.
+- **A real TUI, not just a spinner.** An Ink-powered interface shows every stage of the process — download, upload, transcription — in real time.
+- **Zero setup friction.** The `yt-dlp` binary is downloaded automatically on install; no need to install Python or configure anything separately.
+- **Works with or without flags.** Run `./yt-transcriber` and answer the prompts, or pass everything via the command line for use in scripts.
 
-## Os dois motores
+## The two engines
 
 | | **Gemini** | **Whisper** |
 |---|---|---|
-| Onde roda | Nuvem (`@google/genai`) | 100% local (`whisper-cli`) |
-| Requer | `GEMINI_API_KEY` | Modelo baixado em `~/.cache/whisper.cpp/` |
-| Resultado | Texto chega em streaming, em tempo real | Processado em lote |
-| Ideal para | Rapidez e qualidade sem instalar nada pesado | Privacidade, uso offline, sem custo de API |
+| Runs on | Cloud (`@google/genai`) | 100% local (`whisper-cli`) |
+| Requires | `GEMINI_API_KEY` | Model downloaded to `~/.cache/whisper.cpp/` |
+| Output | Text arrives in real-time streaming | Processed in batch |
+| Best for | Speed and quality without installing anything heavy | Privacy, offline use, no API cost |
 
-## Instalação
+## Installation
 
 ```bash
 git clone git@github.com:jotafurtado/yt-transcriber.git
 cd yt-transcriber
-npm install        # também baixa o binário do yt-dlp automaticamente
+npm install        # also downloads the yt-dlp binary automatically
 npm run build
 ```
 
-Configure sua chave do Gemini (necessária apenas se for usar esse motor):
+Set your Gemini API key (only needed if you plan to use that engine):
 
 ```bash
-echo "GEMINI_API_KEY=sua_chave_aqui" > .env
+echo "GEMINI_API_KEY=your_api_key_here" > .env
 ```
 
-Se quiser usar o Whisper, instale o `whisper-cli`:
+If you want to use Whisper, install `whisper-cli`:
 
 ```bash
 brew install whisper-cpp
 ```
 
-A CLI verifica automaticamente se o modelo do Whisper existe e oferece para baixar caso não esteja presente.
+The CLI automatically checks whether the Whisper model exists and offers to download it if it's missing.
 
-## Uso
+## Usage
 
-### Modo interativo (recomendado)
+### Interactive mode (recommended)
 
 ```bash
 ./yt-transcriber
 ```
 
-A CLI pede o link do vídeo, deixa você escolher o motor, configurar as opções e acompanhar o progresso em tempo real, etapa por etapa.
+The CLI asks for the video link, lets you pick the engine, configure options, and follow the progress in real time, stage by stage.
 
-### Modo direto
+### Direct mode
 
 ```bash
 ./yt-transcriber "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-### Totalmente não interativo (ideal para scripts)
+### Fully non-interactive (great for scripts)
 
 ```bash
 # Gemini
 ./yt-transcriber --engine gemini "https://www.youtube.com/watch?v=VIDEO_ID"
 
 # Whisper
-./yt-transcriber --engine whisper --model large-v3-turbo-q5_0 --language pt "https://www.youtube.com/watch?v=VIDEO_ID"
+./yt-transcriber --engine whisper --model large-v3-turbo-q5_0 --language en "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-### Opções
+### Options
 
 ```text
-  -e, --engine <gemini|whisper>   Motor de transcrição
-  -m, --model <model>             Modelo (Gemini: gemini-3.5-flash | Whisper: large-v3-turbo-q5_0)
-  -l, --language <lang>           Idioma do áudio para o Whisper (auto, pt, en, es, ...)
-  -o, --output-dir <dir>          Pasta de saída (padrão: output)
-      --keep-audio                Mantém o arquivo de áudio baixado
-  -h, --help                      Mostra a ajuda
+  -e, --engine <gemini|whisper>   Transcription engine
+  -m, --model <model>             Model (Gemini: gemini-3.5-flash | Whisper: large-v3-turbo-q5_0)
+  -l, --language <lang>           Audio language for Whisper (auto, pt, en, es, ...)
+  -o, --output-dir <dir>          Output directory (default: output)
+      --keep-audio                Keep the downloaded audio file
+  -h, --help                      Show this help message
 ```
 
-Qualquer opção passada via flag pula a pergunta correspondente na interface — dá para misturar flags e prompts como preferir.
+Any option passed as a flag skips the corresponding interactive prompt, so you can freely mix flags and prompts.
 
-## Como funciona por baixo dos panos
+## How it works under the hood
 
 ```
-[Link do YouTube]
+[YouTube Link]
        │
        ▼
- 1. Extração de áudio (yt-dlp)        ──► Arquivo M4A/WebM temporário
+ 1. Audio extraction (yt-dlp)          ──► Temporary M4A/WebM file
        │
        ▼
- 2. Upload / processamento local       ──► Gemini Files API ou conversão para WAV (Whisper)
+ 2. Upload / local processing          ──► Gemini Files API or WAV conversion (Whisper)
        │
        ▼
- 3. Transcrição inteligente            ──► Gemini 3.5 Flash ou Whisper.cpp, com timestamps e speakers
+ 3. Intelligent transcription          ──► Gemini 3.5 Flash or Whisper.cpp, with timestamps and speakers
        │
        ▼
- 4. Finalização                        ──► Salvo em output/, arquivos temporários limpos
+ 4. Finalization                       ──► Saved to output/, temporary files cleaned up
 ```
 
-Mais detalhes técnicos da arquitetura estão em [`AGENTS.md`](./AGENTS.md).
+More technical architecture details are in [`AGENTS.md`](./AGENTS.md).
 
-## Requisitos
+## Requirements
 
 - Node.js 20+
-- `ffmpeg` no PATH (necessário apenas para o motor Whisper)
-- `whisper-cli` via `brew install whisper-cpp` (necessário apenas para o motor Whisper)
+- `ffmpeg` on the PATH (only needed for the Whisper engine)
+- `whisper-cli` via `brew install whisper-cpp` (only needed for the Whisper engine)
 
-## Créditos
+## Credits
 
-Construído sobre [yt-dlp](https://github.com/yt-dlp/yt-dlp), [whisper.cpp](https://github.com/ggerganov/whisper.cpp), a [API do Gemini](https://ai.google.dev/) e [Ink](https://github.com/vadimdemedes/ink).
+Built on top of [yt-dlp](https://github.com/yt-dlp/yt-dlp), [whisper.cpp](https://github.com/ggerganov/whisper.cpp), the [Gemini API](https://ai.google.dev/), and [Ink](https://github.com/vadimdemedes/ink).

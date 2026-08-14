@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Box, Text, useApp, useInput } from "ink";
-import Link from "ink-link";
 import { pathToFileURL } from "node:url";
 import SelectInput from "ink-select-input";
 import TextInput from "ink-text-input";
@@ -32,6 +31,12 @@ const LOGO = [
   "░░█░░█▀▄░█▀█░█░█░▀▀█░█░░░█▀▄░░█░░█▀▄░█▀▀░█▀▄",
   "░░▀░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀░░▀▀▀░▀░▀",
 ].join("\n");
+// Warp's TERM_PROGRAM=WarpTerminal is not allowlisted by supports-hyperlinks,
+// so ink-link/terminal-link returns plain text (fallback). Force OSC 8 anyway:
+// Warp does support OSC 8 — Cmd+click opens file:// links.
+const hyperlink = (text: string, url: string) =>
+  `\u001b]8;;${url}\u001b\\${text}\u001b]8;;\u001b\\`;
+
 
 // Clamp the app to the terminal width so bordered boxes and pasted/wrapped text
 // never overflow past the right edge, even with long titles or pasted input.
@@ -343,7 +348,7 @@ export const App: React.FC<AppProps> = ({
         const fileName = `${slugifyFilename(audio.title)}.txt`;
         const outFilePath = join(outDirResolved, fileName);
         await writeFile(outFilePath, resultText, "utf8");
-        addLog(`Saved to: \u001b]8;;${pathToFileURL(outFilePath).href}\u0007${outFilePath}\u001b]8;;\u0007`, "ok");
+        addLog(`Saved to: ${hyperlink(outFilePath, pathToFileURL(outFilePath).href)}`, "ok");
 
         // 5. Clean up local files
         setActiveStage(5);
@@ -573,18 +578,14 @@ export const App: React.FC<AppProps> = ({
               </Text>
               <Text>
                 <Text bold>YouTube URL: </Text>
-                <Link url={completedInfo.url} fallback={false}>
-                  <Text color="cyan" underline>
-                    {completedInfo.url}
-                  </Text>
-                </Link>
+                <Text color="cyan" underline>
+                  {hyperlink(completedInfo.url, completedInfo.url)}
+                </Text>
               </Text>
               <Text bold>Saved File:</Text>
-              <Link url={pathToFileURL(completedInfo.outputPath).href} fallback={false}>
-                <Text color="cyan" underline>
-                  {completedInfo.outputPath}
-                </Text>
-              </Link>
+              <Text color="cyan" underline>
+                {hyperlink(completedInfo.outputPath, pathToFileURL(completedInfo.outputPath).href)}
+              </Text>
               <Text>
                 <Text bold>Engine: </Text>
                 {completedInfo.engine}
