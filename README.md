@@ -42,7 +42,7 @@ Cole um link, escolha o motor de transcrição e pronto: o áudio é extraído, 
 ## Instalação
 
 ```bash
-git clone <url-do-repositorio>
+git clone git@github.com:jotafurtado/yt-transcriber.git
 cd yt-transcriber
 npm install        # também baixa o binário do yt-dlp automaticamente
 npm run build
