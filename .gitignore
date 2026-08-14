@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.bin/
+output/
+
+# Segredos locais e configurações
+.env
+
+# Saídas temporárias e arquivos do sistema
+.DS_Store

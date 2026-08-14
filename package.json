@@ -1,0 +1,37 @@
+{
+  "name": "yt-transcriber",
+  "version": "1.0.0",
+  "description": "CLI interativo em TypeScript para transcrever vídeos do YouTube com Gemini ou Whisper.",
+  "type": "module",
+  "bin": {
+    "yt-transcriber": "./dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "start": "node dist/cli.js",
+    "setup:yt-dlp": "node scripts/setup-yt-dlp.mjs",
+    "postinstall": "npm run setup:yt-dlp"
+  },
+  "dependencies": {
+    "@google/genai": "^2.16.0",
+    "@inquirer/prompts": "^8.5.2",
+    "dotenv": "^17.4.2",
+    "ink": "^7.1.1",
+    "ink-link": "^5.0.0",
+    "ink-select-input": "^6.2.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^6.0.0",
+    "ora": "^9.4.1",
+    "react": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}

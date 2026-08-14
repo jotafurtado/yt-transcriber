@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Get directory where this script is located
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ ! -f "$DIR/dist/cli.js" ]]; then
+  echo "O projeto ainda não foi compilado. Execute npm install e npm run build." >&2
+  exit 1
+fi
+
+exec node "$DIR/dist/cli.js" "$@"
